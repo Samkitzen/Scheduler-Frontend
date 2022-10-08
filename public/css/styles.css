@@ -1,0 +1,144 @@
+*
+{
+    margin-left:2%;
+    margin-right:2%;
+    /*padding:0;*/
+
+}
+h1
+{
+    text-align: center;
+}
+body
+{
+    display: flex;
+    justify-content: center;
+    align-items: centre;
+    min-height: 100vh;
+    background:#333;
+}
+.reqList
+{
+    border: 1px solid #151314;
+    border-radius: 10px;
+    background: linear-gradient(145deg,#2e2e2e,#373737);
+    text-align: center;
+    box-shadow: 9px 9px 18px #1f1f1f,
+                -9px -9px 18px #474747;
+}
+.reqListHead
+{
+    border: 1px solid #151314;
+    color: #00FFFF;
+    text-align: center;
+    border-radius: 5px;
+}
+/*th:hover
+{
+    background:#ff0157;
+    color:#fff;
+    box-shadow:9px 9px 18 px #1f1f1f,
+               -9px -9px 18px #474747
+}*/
+.tooltip,.days
+{
+    border: 1px solid #151314;
+    color: #00FFFF;
+    text-align: center;
+    border-radius: 5px;
+}
+.tooltip:hover
+{
+    background:#00FFFF;
+    color:#333;
+    box-shadow:9px 9px 18 px #1f1f1f,
+               -9px -9px 18px #474747
+}
+/*#fff*/
+table.center
+{
+    margin-left:auto;
+    margin-right:auto;
+}
+
+/*---------------- popup css -------------*/
+
+.popup
+{
+    position:fixed;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%) scale(0);
+    transition:200ms ease-in-out;
+    border: 1px solid black;
+    border-radius: 10px;
+    z-index:10;
+    background-color: white;
+    min-width:400px;
+    max-width:80%;
+    height:40%;
+}
+.popup.active
+{
+    transform: translate(-50%,-50%) scale(1);
+}
+.popup-header
+{
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items:center;
+    border-bottom: 1px solid black;
+}
+.popup-header.title
+{
+    font-size:1.25rem;
+    font-weight: bold;
+}
+
+.popup-header.close-button
+{
+    cursor: pointer;
+    border: none;
+    outline:none;
+    background:#333;
+    font-weight:bold;
+}
+.popup-body
+{
+    padding: 10px 15px;
+}
+#overlay
+{
+    position:fixed;
+    opacity:0;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background-color:rgba(0,0,0,0.5);
+    pointer-events:none;
+}
+#overlay.active
+{
+    pointer-events:all;
+    opacity:1;
+}
+#submit
+{
+    text-align:center;
+}
+#Cancel
+{
+    background-color:red;
+}
+.LectureCancel
+{
+    background:#ff0157;
+    color:#fff;
+}
+.Schedule
+{
+    background-color:aqua;
+    color:black;
+}

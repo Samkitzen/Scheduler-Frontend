@@ -1,0 +1,87 @@
+<html>
+    <head>
+        <title>Time Table</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="css/styles.css">
+        <script src= "functions.js"></script>
+    </head>
+    <body onLoad="onLoad()">
+        <div id="main">
+            <table class="reqList">
+                <thead>
+                    <tr>
+                        <th class="reqListHead">Days</th>
+                        <th class="reqListHead">8:00 AM - 9:00 AM  </th>
+                        <th class="reqListHead">9:00 AM - 10:00 AM </th>
+                        <th class="reqListHead">10:00 AM - 11:00 AM</th>
+                        <th class="reqListHead">11:00 AM - 12:00 PM</th>
+                        <th class="reqListHead">12:00 PM - 1:00 PM </th>
+                        <th class="reqListHead">1:00 PM - 2:00 PM  </th>
+                        <th class="reqListHead">2:00 PM - 3:00 PM  </th>
+                        <th class="reqListHead">3:00 PM - 4:00 PM  </th>
+                        <th class="reqListHead">4:00 PM - 5:00 PM  </th>
+                    </tr>
+                </thead>
+                <tbody id="table_body">
+                    <% for(let i=1;i<=6;i++) {%>
+                    <tr>
+                            <% for(let j=0;j<10;j++){ %> 
+                                <% let c = "tooltip "; %>
+                                <% if(j===0){ %>
+                                    <td class='<%=c%>'><%= dm[i]%></td>
+                                <%continue }%>
+                                <% if(timeTable[i][tm[j]].bit===1){c+="LectureCancel";}%>
+                                <td class='<%=c%>' id= "<%=i%>+<%=j%>"  onclick="updtbl(<%=i%>,<%=j%>)" >  <%= timeTable[i][tm[j]].subjectCode %>  </td>
+                            <% } %>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+
+            <table class="reqList">
+                <thead>
+                    <tr>
+                        <th class="reqListHead">Subject Code</th>
+                        <th class="reqListHead">Subject Name </th>
+                        <th class="reqListHead">Faculty Code</th>
+                        <th class="reqListHead">Faculty Name</th>
+                    </tr>
+                </thead>
+                <tbody id="subject-table_body">
+                    <% for(let i=1;i<=6;i++) {%>
+                    <tr>
+                            <% for(let j=0;j<10;j++){ %> 
+                                <% let c = "tooltip "; %>
+                                <% if(j===0){ %>
+                                    <td class='<%=c%>'><%= dm[i]%></td>
+                                <%continue }%>
+                                <% if(timeTable[i][tm[j]].bit===1){c+="LectureCancel";}%>
+                                <td class='<%=c%>' id= "<%=i%>+<%=j%>"  onclick="updtbl(<%=i%>,<%=j%>)" >  <%= timeTable[i][tm[j]].subjectCode %>  </td>
+                            <% } %>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+        <div class="popup" id="popup">
+            <div class="popup-header">
+                <div class="title">header</div>
+                <button class="close-button" onclick="closeUpdater()">&times;</button>
+            </div>
+            <div class="popup-body">
+                <form id="submitter" action="/" method="post">
+                    <label for="subjectCode">Subject Code:</label>
+                     <select id="selectSubject" name="subjectCode">
+                        <option>Choose Subject</option>
+                      </select>
+                    <br><br>
+                    <div id="submitt">
+                        
+                    </div>
+                    <button type="submit" name="submitButton" value="change" onclick='closeUpdater()'> Submit</button>
+                </form>
+            </div>
+        </div>
+        <div id="overlay" onclick="closeUpdater()"></div>
+    </body>
+</html>
