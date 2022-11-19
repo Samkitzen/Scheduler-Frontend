@@ -9,7 +9,7 @@ h1
 {
     text-align: center;
 }
-body
+.wrapper
 {
     display: flex;
     justify-content: center;
@@ -135,7 +135,17 @@ table.center
 .LectureCancel
 {
     background:#ff0157;
-    color:#fff;
+    color:black;
+}
+.LectureRescheduled
+{
+    background:#cfbac1;
+    color:black;
+}
+.LectureDone
+{
+    background:#34ff3e;
+    color:black;
 }
 .Schedule
 {

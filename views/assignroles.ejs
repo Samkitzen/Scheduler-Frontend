@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Roles</title>
+</head>
+<style>
+    table,
+    th,
+    td {
+        border: 1px solid;
+    }
+</style>
+
+<body onload=fetchAllUsers()>
+
+    <table id="user-table">
+        <tr>
+            <th>User</th>
+            <th>Roles</th>
+            <th>Change</th>
+            <th>Button</th>
+        </tr>
+
+    </table>
+    <script>
+        const url = "http://localhost:3000/api/";
+        const userTable = document.getElementById('user-table')
+        const fetchAllUsers = async () => {
+            await fetch(url + "auth/getusers").then(async (d) => {
+                const users = await d.json();
+                var tablecontent = ''
+                for (var i = 0; i < users.length; i++) {
+                    var user = users[i];
+                    console.log(user._id);
+                    tablecontent += `<tr id='user-${user._id}'>
+                        <td>${user.email }</td>
+                        <td>${user.role}</td>
+                        <td>
+                        <select name="roles" id="selectRole-${user._id}">
+                        <option value="admin">Admin</option>
+                        <option value="faculty">Faculty</option>
+                        <option value="CR">Class Representative</option>
+                        <option value="basic">Basic User</option>
+                        </select>
+                        </td>
+                        <td><button onclick="updateRole(userId = '${user._id}')">Submit Changes</button></td>
+                        </tr>`
+                }
+                userTable.innerHTML += tablecontent
+            });
+
+        }
+        const updateRole = (userId) = () => {
+            const clickedUser = document.getElementById('user-' + userId)
+            const selectedRole = document.getElementById('selectRole-' + userId)
+            console.log(selectedRole.value);
+            const data = {
+                userId,
+                role: selectedRole.value
+            }
+            fetch("http://localhost:3000/api/auth/assignrole", {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'auth-token': localStorage.getItem('token')
+                },
+                body: JSON.stringify(data)
+            }).then((response) => {
+                console.log(response);
+                // location.reload()
+            })
+        }
+    </script>
+</body>
+
+</html>

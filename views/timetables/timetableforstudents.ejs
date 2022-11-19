@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <title>Time Table</title>
+    <!-- <script src="/functions.js"></script> -->
+</head>
+
+<body onLoad="onLoad()">
+    <%- include('../partials/navbar') -%>
+    <h1>TimeTable Sem : <%= sem %> Branch : <%= branchCode %> </h1>
+    <div class="wrapper">
+    
+        <div id="main">
+        <table class="reqList">
+            <thead>
+                <tr>
+                    <th class="reqListHead">Days</th>
+                    <th class="reqListHead">8:00 AM - 9:00 AM </th>
+                    <th class="reqListHead">9:00 AM - 10:00 AM </th>
+                    <th class="reqListHead">10:00 AM - 11:00 AM</th>
+                    <th class="reqListHead">11:00 AM - 12:00 PM</th>
+                    <th class="reqListHead">12:00 PM - 1:00 PM </th>
+                    <th class="reqListHead">1:00 PM - 2:00 PM </th>
+                    <th class="reqListHead">2:00 PM - 3:00 PM </th>
+                    <th class="reqListHead">3:00 PM - 4:00 PM </th>
+                    <th class="reqListHead">4:00 PM - 5:00 PM </th>
+                </tr>
+            </thead>
+            <tbody id="table_body">
+                <% for(let i=1;i<=6;i++) {%>
+                <tr>
+                    <% for(let j=0;j<10;j++){ %>
+                    <% let c="tooltip " ; %>
+                    <% if(j===0){ %>
+                    <td class='<%=c%>'>
+                        <%= dm[i]%>
+                    </td>
+                    <%continue }%>
+                    <% if(timeTable[i][tm[j]].bit===1){c+="LectureDone" ;}%>
+                    <% if(timeTable[i][tm[j]].bit===2){c+="LectureCancel" ;}%>
+                    <% if(timeTable[i][tm[j]].bit===3){c+="LectureRescheduled" ;}%>
+                    <td class='<%=c%>' id="<%=i%>+<%=j%>">
+                        <%= timeTable[i][tm[j]].subjectCode %>
+                    </td>
+                    <% } %>
+                </tr>
+                <% } %>
+            </tbody>
+        </table>
+
+
+        <!-- Subject Table  -->
+        <table class="reqList">
+            <thead>
+                <tr>
+                    <th class="reqListHead">Subject Code</th>
+                    <th class="reqListHead">Subject Name </th>
+                    <th class="reqListHead">Faculty Code</th>
+                    <th class="reqListHead">Faculty Name</th>
+                </tr>
+            </thead>
+            <tbody id="subject-table_body">
+
+            </tbody>
+        </table>
+
+    </div>
+    </div>
+    
+
+    <script>
+        const sem = '<%-sem%>'
+        const branchCode = '<%-branchCode%>'
+        const tm = '[<%-tm%>]'
+
+        const onLoad = async () => {
+            const backendURL = "http://localhost:3000/api/subject"
+            await fetch(`${backendURL}/${sem}/${branchCode}`).then(async (d) => {
+                const subjects = await d.json();
+
+                const subTable = document.getElementById("subject-table_body")
+                let html = ""
+                for (var i = 0; i < subjects.length; i++) {
+                    html += `<tr><td class='tooltip'>${subjects[i].subjectCode}</td>
+        <td class='tooltip'>${subjects[i].name}</td>
+        <td class='tooltip'>${subjects[i].teacherCode}</td>
+        <td class='tooltip'>${subjects[i].teacherName}</td>
+        </tr>`
+                }
+                subTable.innerHTML = html
+            });
+        }
+    </script>
+
+</body>
+
+</html>

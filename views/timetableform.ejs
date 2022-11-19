@@ -1,0 +1,80 @@
+<%- include('partials/header') %> 
+
+<%- include('partials/navbar') %> 
+
+<body onload="onLoad()">
+    <form action="">
+        <label for="sem">Sem</label>
+        <select id="selectSem">
+            <option>Choose Semester</option>
+        </select>
+        <label for="Branch">Branch</label>
+        <select id="selectBranch">
+            <option>Choose Branch</option>
+        </select>
+        <button type="button" onclick="handleSubmit(event)">Submit</button>
+    </form>
+    <script>
+        const url = "http://localhost:3000/api/";
+        const onLoad = async () => {
+            //Sem Dropdown Populate
+            var selectSem = document.getElementById("selectSem");
+            var options = ["1", "2", "3", "4", "5", "6", "7", "8"];
+
+            for (var i = 0; i < options.length; i++) {
+                var opt = options[i];
+                var el = document.createElement("option");
+                el.textContent = opt;
+                el.value = opt;
+                selectSem.appendChild(el);
+            }
+            //Branch Dropdown Populate
+            var selectBranch = document.getElementById("selectBranch");
+            await fetch(url + "branch").then(async (d) => {
+                const branches = await d.json();
+                for (var i = 0; i < branches.length; i++) {
+                    var opt = branches[i];
+                    console.log(opt.name);
+                    var el = document.createElement("option");
+                    el.textContent = opt.name;
+                    el.value = opt.branchCode;
+                    selectBranch.appendChild(el);
+                }
+            });
+        };
+
+        const selectSem = document.getElementById("selectSem");
+        const selectBranch = document.getElementById("selectBranch");
+        const success = document.getElementById("success");
+        const err = document.getElementById("err");
+        var subject = [];
+
+
+        const handleSubmit = async (e) => {
+            // e.preventDefault()
+            if(localStorage.getItem('token')){
+
+            const authToken = localStorage.getItem('token')
+            const resp = await fetch("http://localhost:3000/api/auth/getuser",{
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'auth-token': authToken
+                },
+            })
+
+            const user = await resp.json()
+            const role = user.role
+            if(role==='admin'){
+                location.replace(`/timetableforadmin/${selectSem.value}/${selectBranch.value}`)
+            }else{
+                location.replace(`/timetableforcr/${selectSem.value}/${selectBranch.value}`)
+            }
+            }else{
+                location.replace(`/timetableforstudents/${selectSem.value}/${selectBranch.value}`)
+            }
+        };
+    </script>
+</body>
+
+</html>

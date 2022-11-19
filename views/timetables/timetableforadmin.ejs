@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <title>Time Table</title>
+    <script src="/functions.js"></script>
+</head>
+
+<body onLoad="onLoad()">
+    <%- include('../partials/adminnavbar') -%>
+    <h1>TimeTable(ADMIN view only)  Sem : <%= sem %> Branch : <%= branchCode %> </h1>
+    <div class="wrapper">
+    <div id="main">
+        <table class="reqList">
+            <thead>
+                <tr>
+                    <th class="reqListHead">Days</th>
+                    <th class="reqListHead">8:00 AM - 9:00 AM </th>
+                    <th class="reqListHead">9:00 AM - 10:00 AM </th>
+                    <th class="reqListHead">10:00 AM - 11:00 AM</th>
+                    <th class="reqListHead">11:00 AM - 12:00 PM</th>
+                    <th class="reqListHead">12:00 PM - 1:00 PM </th>
+                    <th class="reqListHead">1:00 PM - 2:00 PM </th>
+                    <th class="reqListHead">2:00 PM - 3:00 PM </th>
+                    <th class="reqListHead">3:00 PM - 4:00 PM </th>
+                    <th class="reqListHead">4:00 PM - 5:00 PM </th>
+                </tr>
+            </thead>
+            <tbody id="table_body">
+                <% for(let i=1;i<=6;i++) {%>
+                <tr>
+                    <% for(let j=0;j<10;j++){ %>
+                    <% let c="tooltip " ; %>
+                    <% if(j===0){ %>
+                    <td class='<%=c%>'>
+                        <%= dm[i]%>
+                    </td>
+                    <%continue }%>
+                    <% if(timeTable[i][tm[j]].bit===1){c+="LectureCancel" ;}%>
+                    <td class='<%=c%>' id="<%=i%>+<%=j%>" onclick="updtbl('<%=i%>','<%=j%>')">
+                        <%= timeTable[i][tm[j]].subjectCode %>
+                    </td>
+                    <% } %>
+                </tr>
+                <% } %>
+            </tbody>
+        </table>
+
+
+        <!-- Subject Table  -->
+        <table class="reqList">
+            <thead>
+                <tr>
+                    <th class="reqListHead">Subject Code</th>
+                    <th class="reqListHead">Subject Name </th>
+                    <th class="reqListHead">Faculty Code</th>
+                    <th class="reqListHead">Faculty Name</th>
+                </tr>
+            </thead>
+            <tbody id="subject-table_body">
+
+            </tbody>
+        </table>
+
+    </div>
+    <div class="popup" id="popup">
+        <div class="popup-header">
+            <div class="title">header</div>
+            <button class="close-button" onclick="closeUpdater()">&times;</button>
+        </div>
+        <div class="popup-body">
+            <form>
+                <label for="subjectCode">Subject Code:</label>
+                <select id="selectSubject" name="subjectCode">
+                    <option>Choose Subject</option>
+                </select>
+                <button type="button" name="submitButton" value="change" onclick='handleChangeSubmit()'> Submit</button>
+            </form>
+        </div>
+    </div>
+    <div id="overlay" onclick="closeUpdater()"></div>
+</div>
+    <script>
+        const sem = '<%-sem%>'
+        const branchCode = '<%-branchCode%>'
+        const tm = [<%-tm%>]
+
+        const subjectCode = document.getElementById('selectSubject')
+        const handleChangeSubmit = () => {
+            closeUpdater()
+            console.log(tm[selectedTime]);
+            const data = {
+                sem,
+                branchCode,
+                day: selectedDay,
+                time: tm[selectedTime],
+                subjectCode: subjectCode.value
+            }
+            fetch("http://localhost:3000/api/timetable", {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'auth-token': localStorage.getItem('token')
+                },
+                body: JSON.stringify(data)
+            }).then(() => {
+                location.reload()
+            })
+        }
+    </script>
+</body>
+
+</html>

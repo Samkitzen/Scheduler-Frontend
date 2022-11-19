@@ -1,0 +1,57 @@
+<%- include('../partials/header') -%>
+
+<%- include('../partials/adminnavbar') -%>
+
+
+
+<div id="teacher-form">
+    <form>
+        <label for="name">Teacher Name</label>
+        <input type="text" name="name" id="name" />
+        <label for="cpde">Teacher Code</label>
+        <input type="text" name="code" id="code" />
+        <span id="err"></span>
+        <button type="button" onclick="handleSubmit(event)">Submit</button>
+    </form>
+</div>
+<div id="success" style="visibility: hidden;">
+    <h3>Data Submitted Successfully</h3>
+    <button onclick="handleAddAnother()">Add Another Data</button>
+</div>
+
+<script>
+    const name = document.getElementById("name");
+    const teacherCode = document.getElementById("code");
+    const teacherForm = document.getElementById("teacher-form");
+    const success = document.getElementById("success");
+    const err = document.getElementById("err");
+    const handleSubmit = async (e) => {
+        // e.preventDefault()
+
+        const data = { name: name.value, teacherCode: teacherCode.value };
+        const url = "http://localhost:3000/api/teacher"
+        const response = await fetch(url, {
+            method: "POST", // *GET, POST, PUT, DELETE, etc.
+            mode: "cors", // no-cors, *cors, same-origin
+            headers: {
+                "Content-Type": "application/json",
+                "auth-token" : localStorage.getItem('token')
+            },
+            body: JSON.stringify(data),
+        });
+        if (response.status === 200) {
+            branchForm.style.visibility = "hidden";
+            success.style.visibility = 'visible'
+        } else {
+            err.innerHTML = "Some Error Occurred"
+        }
+    };
+    const handleAddAnother = () => {
+        name.value = ""
+        branchCode.value = ""
+        branchForm.style.visibility = "visible";
+        success.style.visibility = 'hidden'
+    }
+</script>
+
+<%- include('../partials/footer') -%>

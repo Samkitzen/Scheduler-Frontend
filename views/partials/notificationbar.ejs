@@ -1,0 +1,22 @@
+<style>
+    .notif-bar{
+        height:40px;
+        background-color: red;
+    }
+    .hidden{
+        visibility: hidden;
+        
+    }
+</style>
+<div id="notif" class="notif-bar" >
+    <span class="notif-content"><%=content %></span>
+</div>
+<script>
+    const show = <%= show %>
+    console.log("hh",show);
+    if(!show){
+        document.getElementById('notif').classList.add('hidden')
+    }else{
+        document.getElementById('notif').classList.remove('hidden')
+    }
+</script>

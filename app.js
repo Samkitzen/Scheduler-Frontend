@@ -1,88 +1,103 @@
-const express=require('express');
-const bodyParser=require('body-parser');
-const fetch = require('node-fetch')
+const express = require('express');
+const bodyParser = require('body-parser');
+const fetch = require('node-fetch');
+const path = require('path')
 
-const app=express();
-app.set('view engine','ejs');
-app.use(bodyParser.urlencoded({extended:true}));
-app.use(express.static('public'));
+const app = express();
+app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use("/", express.static(path.join(__dirname, 'public')));
 
 const backendURL = "http://localhost:3000/api"
 
 const dayMapper = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const timeMapper = ['','8','9','10','11','12','1','2','3','4']
+const timeMapper = ['', '8', '9', '10', '11', '12', '1', '2', '3', '4']
+
+//Home
+app.get('/', (req, res) => {
+    res.render('index')
+})
+app.get('/admin', (req, res) => {
+    res.render('admindashboard')
+})
+
+app.get('/timetableform', function (req, res) {
+    res.render('timetableform')
+});
+
+//******auth*****
+app.get('/signup', (req, res) => {
+    res.render('auth/signup')
+})
+
+app.get('/login', (req, res) => {
+    res.render('auth/login')
+})
+
+app.get('/assignroles', (req, res) => {
+    res.render('assignroles')
+})
+//******auth end********
 
 
-//get values of sem and branchCode dynamically 
-const sem = 7
-const branchCode = "CSA"
+//************ Admin Only Routes */
+app.get('/branch', (req, res) => {
+    res.render('branchupload')
+})
 
-app.get('/',function(req,res){
-    
+
+//Upload forms for admin
+//teacher upload form
+app.get("/teacher",(req,res)=>{
+    res.render("uploadforms/teacher")
+})
+
+
+//************ Timetable ********* */
+app.get('/timetableforadmin/:sem/:branchCode', function (req, res) {
+    const { sem, branchCode } = req.params;
     fetch(`${backendURL}/timetable/${sem}/${branchCode}`)
-    .then(response => response.json())
-    .then(timetable =>{
-        res.render('calender',{timeTable : timetable,dm:dayMapper,tm:timeMapper })
-    })
-    .catch(err=>{
-        //render error page (to be designed)
-    })
-});
-
-app.get('/status',function(req,res){
-    res.render("status",{});
-});
-
-app.post('/',function(req,res){
-    const day=req.body.day;
-    const period=req.body.period;
-    const subjectCode=(req.body.subjectCode);
-
-    // if(req.body.submitButton=="cancel")
-    // {
-    //     const query = { [`${day}.${period}`]: { subjectCode:subjectCode, bit:1 } };
-    //     //TimeTable.updateOne({_id:1},[day][period]:{bit:1},function(err){if(err){console.log(err);}});
-    //     TimeTable.updateOne({name:"name1"}, query, function(err){});
-    // }
-
-    //START ONly changed this if part ---->samkit
-    // else 
-    if(req.body.submitButton=="change")
-    {
-        const data = {
-            sem,branchCode,day,time:timeMapper[period],subjectCode
-        }
-        fetch(`${backendURL}/timetable`,{
-            method: "PUT",
-            headers: {
-                'Content-Type': 'application/json'
-              },
-              body : JSON.stringify(data)
-        }).then(d=>{
-            res.redirect('/')
+        .then(response => response.json())
+        .then(timetable => {
+            res.render('timetables/timetableforadmin', { timeTable: timetable, dm: dayMapper, tm: timeMapper, sem: sem, branchCode: branchCode })
         })
-        .catch(err=>{
-            //render error page
+        .catch(err => {
+            //render error page (to be designed)
         })
-        // const query = { [`${day}.${period}`]: { subjectCode:subjectCode, bit:0 } };
-        // TimeTable.updateOne({name:"name1"}, query, function(err){});
-    }
+});
+app.get('/timetableforstudents/:sem/:branchCode', function (req, res) {
+    const { sem, branchCode } = req.params;
+    fetch(`${backendURL}/liveweek/${sem}/${branchCode}`)
+        .then(response => response.json())
+        .then(timetable => {
+            res.render('timetables/timetableforstudents', { timeTable: timetable, dm: dayMapper, tm: timeMapper, sem: sem, branchCode: branchCode })
+        })
+        .catch(err => {
+            //render error page (to be designed)
+        })
+});
+app.get('/timetableforcr/:sem/:branchCode', function (req, res) {
+    const { sem, branchCode } = req.params;
+    fetch(`${backendURL}/liveweek/${sem}/${branchCode}`)
+        .then(response => response.json())
+        .then(timetable => {
+            res.render('timetables/timetableforcr', { timeTable: timetable, dm: dayMapper, tm: timeMapper, sem: sem, branchCode: branchCode })
+        })
+        .catch(err => {
+            //render error page (to be designed)
+        })
+});
+//************ Timetable Ends ********* */
 
-    //END 
 
 
-    // else if(req.body.submitButton=="schedule")
-    // {
-    //     //TimeTable.updateOne({_id:1},{day:{period:{bit:2}}},function(err){if(err){console.log(err);}});
-    //     const today=new Date().getDate();
-    //     Status.updateOne({date:today},{lectures:{subjectCode:subjectCode, count:count+1}});
-    // }
-    // res.redirect('/');
+app.get('/status', function (req, res) {
+    res.render("status", {});
 });
 
 
 
-app.listen(3003, function(err){
-    if(err){ console.log(err); }
-    else{ console.log("Frontend running on port 3003")};
+app.listen(3003, function (err) {
+    if (err) { console.log(err); }
+    else { console.log("Frontend running on port 3003") };
 })

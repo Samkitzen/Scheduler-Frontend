@@ -1,0 +1,41 @@
+<nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Scheduler Admin DashBoard</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/assignroles">Assign Roles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/branch">Add Branhces</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/subject">Add Subjects</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/teacher">Add Teachers</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/timetableform">Timetable</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="handleLogout(event)">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<script>
+    const handleLogout = (e)=>{
+        e.preventDefault()
+        localStorage.removeItem('token')
+        location.replace('/')
+    }
+</script>
